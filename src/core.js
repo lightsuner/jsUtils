@@ -1,5 +1,5 @@
 define(function() {
-  'use strict';
+  "use strict";
 
   var
   // Use the correct document accordingly with window argument (sandbox)

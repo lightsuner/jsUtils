@@ -1,14 +1,14 @@
 define([
   "./core"
 ], function(jsUtils) {
-  'use strict';
+  "use strict";
 
   jsUtils.prototype.queryToHash = function(name, source) {
 
-    source || (source = '');
+    source || (source = "");
     var queryParamsString = (source.length) ? source : window.location.search;
     if (queryParamsString.indexOf("?") !== -1) {
-      queryParamsString = queryParamsString.split('?')[1];
+      queryParamsString = queryParamsString.split("?")[1];
     }
     queryParamsString = decodeURIComponent(queryParamsString);
 
@@ -101,7 +101,7 @@ define([
    * @returns {*}
    */
   function stripLastSquareBracket(string) {
-    return string.replace(/\]$/, '');
+    return string.replace(/\]$/, "");
   }
 
   function clone(o) {

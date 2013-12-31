@@ -1,7 +1,7 @@
 define([
   "./core"
 ], function(jsUtils) {
-  'use strict';
+  "use strict";
 
 
   /**

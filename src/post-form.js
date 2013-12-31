@@ -1,7 +1,7 @@
 define([
   "./core"
 ], function(jsUtils) {
-  'use strict';
+  "use strict";
 
   /**
    * Emulate browser's post request with redirect to passed uri
@@ -10,17 +10,17 @@ define([
    * @param data hash
    */
   jsUtils.prototype.postForm = function (uri, data) {
-    uri || (uri = '');
+    uri || (uri = "");
     data || (data = {});
-    var method = 'post',
+    var method = "post",
       form = document.createElement("form");
 
 
     form.setAttribute("method", method);
     form.setAttribute("action", uri);
-    form.style.display = 'none';
+    form.style.display = "none";
 
-    generateHiddenElements(form, '', data);
+    generateHiddenElements(form, "", data);
 
     document.body.appendChild(form);
     form.submit();
@@ -35,7 +35,7 @@ define([
         if (value.hasOwnProperty(key)) {
           var nextName = key;
           if (parentName) {
-            nextName = parentName + '[' + nextName + ']';
+            nextName = parentName + "[" + nextName + "]";
           }
           generateHiddenElements(form, nextName, value[key]);
         }
