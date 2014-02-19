@@ -10,6 +10,6 @@ and [airbnb JS code guidelines](https://github.com/airbnb/javascript)
 You can read about api [here](/docs/api.md).
 
 ##Release History
-[Release History](/docs/release_history.md.md).
+[Release History](/docs/release_history.md).
 
 ##License
