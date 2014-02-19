@@ -1,18 +1,25 @@
 define(function() {
-  "use strict";
 
-  var
-  // Use the correct document accordingly with window argument (sandbox)
-    document = window.document,
-    version = "@VERSION",
-    previousJsUtils = document.jsUtils;
+    /* jshint unused:false */
+    var document = window.document,
 
-  var jsUtils = function () {};
+        jsUtils = function() {
 
-  jsUtils.noConflict = function noConflict() {
-    document.jsUtils = previousJsUtils;
+            var version = "@VERSION";
+
+            /**
+             * get version of library
+             *
+             * @returns {string}
+             */
+            this.getVersion = function() {
+                return version;
+            };
+        };
+
+    jsUtils.fn = jsUtils.prototype = {
+        constructor: jsUtils
+    };
+
     return jsUtils;
-  };
-
-  return jsUtils;
 });

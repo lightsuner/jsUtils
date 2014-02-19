@@ -1,5 +1,5 @@
 /**
- * Special concat/build task to handle various jQuery build requirements
+ * Special concat/build task to handle various jsUtils build requirements
  * Concats AMD modules, removes their definitions, and includes/excludes specified modules
  */
 
@@ -13,8 +13,8 @@ module.exports = function( grunt ) {
     rdefineEnd = /\}\);[^}\w]*$/,
     config = {
       baseUrl: "src",
-      name: "",
-      out: "",
+      name: "js-utils",
+      out: "dist/js-utils.js",
       // We have multiple minify steps
       optimize: "none",
       // Include dependencies loaded with require
@@ -22,9 +22,10 @@ module.exports = function( grunt ) {
       // Avoid breaking semicolons inserted by r.js
       skipSemiColonInsertion: true,
       wrap: {
+        startFile: "src/intro.js",
+        endFile: "src/outro.js"
       },
-      paths: {
-      },
+      paths: {},
       rawText: {},
       onBuildWrite: convert
     };
@@ -39,28 +40,18 @@ module.exports = function( grunt ) {
    * @param {String} contents The contents to be written (including their AMD wrappers)
    */
   function convert( name, path, contents ) {
-    var amdName;
     // Convert var modules
     if ( /.\/var\//.test( path ) ) {
       contents = contents
         .replace( /define\([\w\W]*?return/, "var " + (/var\/([\w-]+)/.exec(name)[1]) + " =" )
         .replace( rdefineEnd, "" );
 
-
-    } else if ( (amdName = grunt.option( "amd" )) != null && /^exports\/amd$/.test( name ) ) {
-      // Remove the comma for anonymous defines
-      contents = contents
-        .replace( /(\s*)"jquery"(\,\s*)/, amdName ? "$1\"" + amdName + "\"$2" : "" );
-
     } else {
 
-      // Ignore jQuery's exports (the only necessary one)
-      /*if ( name !== "jquery" ) {
         contents = contents
           .replace( /\s*return\s+[^\}]+(\}\);[^\w\}]*)$/, "$1" )
           // Multiple exports
           .replace( /\s*exports\.\w+\s*=\s*\w+;/g, "" );
-      }*/
 
       // Remove define wrappers, closure ends, and empty declarations
       contents = contents
@@ -78,6 +69,12 @@ module.exports = function( grunt ) {
       contents = contents
         .replace( /define\(\[[^\]]+\]\)[\W\n]+$/, "" );
     }
+
+    // Remove anything wrapped with
+    // /* jshint  */
+    contents = contents
+      .replace( /\/\*\s*jshint\s*[\w\W]*?\*\//ig, "" );
+
     return contents;
   }
 
@@ -85,10 +82,10 @@ module.exports = function( grunt ) {
     "build",
     "Concatenate source, remove sub AMD definitions, (include/exclude modules with +/- flags), embed date/version",
     function() {
-      var flag, index,
+      var flag,
         done = this.async(),
         flags = this.flags,
-        optIn = flags[ "*" ],
+        //optIn = flags[ "*" ],
         name = this.data.dest,
         minimum = this.data.minimum,
         removeWith = this.data.removeWith,
@@ -183,20 +180,6 @@ module.exports = function( grunt ) {
       for ( flag in flags ) {
         excluder( flag );
       }
-/*
-      // Handle Sizzle exclusion
-      // Replace with selector-native
-      if ( (index = excluded.indexOf( "sizzle" )) > -1 ) {
-        config.rawText.selector = "define(['./selector-native']);";
-        excluded.splice( index, 1 );
-      }
-
-      // Replace exports/global with a noop noConflict
-      if ( (index = excluded.indexOf( "exports/global" )) > -1 ) {
-        config.rawText[ "exports/global" ] = "define(['../core']," +
-          "function( jQuery ) {\njQuery.noConflict = function() {};\n});";
-        excluded.splice( index, 1 );
-      }*/
 
       grunt.verbose.writeflags( excluded, "Excluded" );
       grunt.verbose.writeflags( included, "Included" );
@@ -228,12 +211,6 @@ module.exports = function( grunt ) {
         grunt.file.write( name, compiled );
       };
 
-      // Turn off opt-in if necessary
-      if ( !optIn ) {
-        // Overwrite the default inclusions with the explicit ones provided
-        config.rawText.jquery = "define([" + (included.length ? included.join(",") : "") + "]);";
-      }
-
       // Trace dependencies and concatenate files
       requirejs.optimize( config, function( response ) {
         grunt.verbose.writeln( response );
@@ -242,22 +219,7 @@ module.exports = function( grunt ) {
       }, function( err ) {
         done( err );
       });
+
     });
 
-  // Special "alias" task to make custom build creation less grawlix-y
-  // Translation example
-  //
-  //   grunt custom:+ajax,-dimensions,-effects,-offset
-  //
-  // Becomes:
-  //
-  //   grunt build:*:*:+ajax:-dimensions:-effects:-offset
-  grunt.registerTask( "custom", function() {
-    var args = this.args,
-      modules = args.length ? args[ 0 ].replace( /,/g, ":" ) : "";
-
-    grunt.log.writeln( "Creating custom build...\n" );
-
-    grunt.task.run([ "build:*:*" + (modules ? ":" + modules : ""), "uglify", "dist" ]);
-  });
 };
