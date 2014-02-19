@@ -1,0 +1,22 @@
+{
+  "name": "jsUtils",
+  "version": "0.3.0",
+  "homepage": "https://github.com/lightsuner/jsUtils",
+  "authors": [
+    "LightSuner <lightsuner@gmail.com>"
+  ],
+  "description": "This is a small library providing some small but very useful functions.",
+  "main": "dist/jsUtios.js",
+  "keywords": [
+    "js",
+    "utils"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
