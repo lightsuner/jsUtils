@@ -18,7 +18,7 @@ define([
         if (queryParamsString.indexOf("?") !== -1) {
             queryParamsString = queryParamsString.split("?")[1];
         }
-        queryParamsString = decodeURIComponent(queryParamsString);
+        queryParamsString = decodeURIComponent(queryParamsString.replace(/\+/g, "%20"));
 
         // cache results
         if (undefined === this._queryDataCache) {

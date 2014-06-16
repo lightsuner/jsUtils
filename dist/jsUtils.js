@@ -2,7 +2,7 @@
  * jsUtils JavaScript Library v0.3.0
  * https://github.com/lightsuner/jsUtils
  *
- * Date: 2014-02-19T09:59Z
+ * Date: 2014-06-16T12:25Z
  */
 
 !(function(window) {
@@ -66,7 +66,7 @@
 
 
     /**
-     * Emulate browser's post request with redirect to passed uri
+     * Emulates browser's post request with redirect to passed uri
      *
      * @param uri
      * @param data hash
@@ -133,7 +133,7 @@
         if (queryParamsString.indexOf("?") !== -1) {
             queryParamsString = queryParamsString.split("?")[1];
         }
-        queryParamsString = decodeURIComponent(queryParamsString);
+        queryParamsString = decodeURIComponent(queryParamsString.replace(/\+/g, "%20"));
 
         // cache results
         if (undefined === this._queryDataCache) {
